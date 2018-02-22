@@ -1,0 +1,22 @@
+{
+  "name": "manga-notifier-kun",
+  "version": "1.0.0",
+  "description": "Manga Notifier Bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "Manga",
+    "Notifier",
+    "Telegram"
+  ],
+  "author": "Muhammad Irfan <naprirfan@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "cheerio": "^1.0.0-rc.2",
+    "express": "^4.16.2",
+    "sqlite3": "^3.1.13"
+  }
+}
