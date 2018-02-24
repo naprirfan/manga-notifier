@@ -7,8 +7,19 @@ const axios = require('axios')
 const config = require('./config.js')
 const telegramBaseUrl = config.TELEGRAM_API_BASE_URL + config.TELEGRAM_BOT_ID
 const cheerio = require('cheerio')
+const bodyParser = require('body-parser');
+
+app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 
 app.get('/', (req, res) => res.send('Hello World!'))
+
+app.post('/new_message', (req, res) => {
+  const { message } = req.body
+  return res.redirect(`/send_message/${config.TELEGRAM_CHAT_ID}/${message}_from_bot!`)
+})
 
 app.get('/send_message/:chat_id/:text*', (req, res) => {
 
