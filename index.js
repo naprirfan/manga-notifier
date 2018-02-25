@@ -82,4 +82,4 @@ app.get('/get_latest_chapter_from_manganel', (req, res) => {
 
 })
 
-app.listen(3000, () => console.log('Manga notifier kun listening on port 3000!'))
+app.listen(config.PORT, () => console.log('Manga notifier kun listening on port 3000!'))
