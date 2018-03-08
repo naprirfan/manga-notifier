@@ -18,7 +18,7 @@ app.use(express.static('public'))
 
 app.get('/', (req, res) => res.send('Hello World!'))
 
-app.post(`/new_message`, (req, res) => {
+app.post(`/new_message_${config.TELEGRAM_BOT_ID}`, (req, res) => {
   bot.processUpdate(req.body);
   res.sendStatus(200);
 })
@@ -49,20 +49,13 @@ app.get('/get_latest_chapter_from_manganel', (req, res) => {
             let $ = cheerio.load(response.data)
             if ($('#mangareader').length) {
               // Build message
-              let encodedUrl = `https%3A%2F%2Fmanganel.me%2Fchapter%2F${mangaSlug}%2Fchapter-${newest}`
-              const message = `${mangaName} chapter ${newest} is here! ${encodedUrl}`
+              const message = `${mangaName} chapter ${newest} is here! https://manganel.me/chapter/${mangaSlug}/chapter-${newest}`
 
               // Update latest chapter in database
               db.run(`UPDATE manga SET latest_chapter = ${newest} WHERE slug = '${mangaSlug}'`)
 
               // Send message
-              axios.get(`${telegramBaseUrl}/sendMessage?chat_id=${config.TELEGRAM_CHAT_ID}&text=${message}`)
-                .then(response => {
-                  console.log('ok')
-                })
-                .catch(error => {
-                  console.log(error)
-                })
+              bot.sendMessage(config.TELEGRAM_CHAT_ID, message)
             }
             else {
               console.log('Manga not available yet')
