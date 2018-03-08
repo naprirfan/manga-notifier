@@ -1,6 +1,5 @@
-var sqlite3 = require('sqlite3').verbose();
-var db = new sqlite3.Database('database');
-
+const sqlite3 = require('sqlite3').verbose();
+const db = new sqlite3.Database('database');
 const express = require('express')
 const app = express()
 const axios = require('axios')
@@ -8,6 +7,8 @@ const config = require('./config.js')
 const telegramBaseUrl = config.TELEGRAM_API_BASE_URL + config.TELEGRAM_BOT_ID
 const cheerio = require('cheerio')
 const bodyParser = require('body-parser');
+const TelegramBot = require('node-telegram-bot-api');
+const bot = new TelegramBot(config.TELEGRAM_BOT_ID)
 
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({
@@ -17,21 +18,18 @@ app.use(express.static('public'))
 
 app.get('/', (req, res) => res.send('Hello World!'))
 
-app.post('/new_message', (req, res) => {
-  const { message } = req.body
-  return res.redirect(`/send_message/${config.TELEGRAM_CHAT_ID}/${message}_from_bot!`)
+app.post(`/new_message`, (req, res) => {
+  bot.processUpdate(req.body);
+  res.sendStatus(200);
 })
 
-app.get('/send_message/:chat_id/:text*', (req, res) => {
+bot.on('message', msg => {
+  bot.sendMessage(msg.chat.id, 'I am alive!');
+});
 
-  axios.get(`${telegramBaseUrl}/sendMessage?chat_id=${req.params.chat_id}&text=${req.params.text}`)
-    .then(response => {
-      return res.send('ok')
-    })
-    .catch(error => {
-      console.log(error)
-      return res.end('error')
-    })
+app.get('/send_message/:message', (req, res) => {
+  bot.sendMessage(config.TELEGRAM_CHAT_ID, req.params.message)
+  return res.send('ok')
 })
 
 app.get('/get_latest_chapter_from_manganel', (req, res) => {
@@ -82,4 +80,4 @@ app.get('/get_latest_chapter_from_manganel', (req, res) => {
 
 })
 
-app.listen(config.PORT, () => console.log('Manga notifier kun listening on port 3000!'))
+app.listen(config.PORT, () => console.log(`Manga notifier kun listening on port ${config.PORT}!`))

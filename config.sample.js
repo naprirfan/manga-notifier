@@ -3,4 +3,5 @@ module.exports = {
   TELEGRAM_BOT_ID: '',
   TELEGRAM_CHAT_ID: '',
   PORT: '',
+  DOMAIN_NAME: ''
 }
