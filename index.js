@@ -27,7 +27,7 @@ app.post(`/new_message_${config.TELEGRAM_BOT_ID}`, (req, res) => {
 })
 
 bot.on('message', msg => {
-  if (msg.text === '/help') {
+  if (msg.text === '/help' || msg.text === '/start') {
     bot.sendMessage(msg.chat.id, helpCommand)
   }
   else {
