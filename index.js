@@ -1,14 +1,17 @@
-const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database('database');
+const sqlite3 = require('sqlite3').verbose()
+const db = new sqlite3.Database('database')
 const express = require('express')
 const app = express()
 const axios = require('axios')
 const config = require('./config.js')
 const telegramBaseUrl = config.TELEGRAM_API_BASE_URL + config.TELEGRAM_BOT_ID
 const cheerio = require('cheerio')
-const bodyParser = require('body-parser');
-const TelegramBot = require('node-telegram-bot-api');
+const bodyParser = require('body-parser')
+const TelegramBot = require('node-telegram-bot-api')
 const bot = new TelegramBot(config.TELEGRAM_BOT_ID)
+
+// Commands
+const helpCommand = require('./commands/help')
 
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({
@@ -24,7 +27,12 @@ app.post(`/new_message_${config.TELEGRAM_BOT_ID}`, (req, res) => {
 })
 
 bot.on('message', msg => {
-  bot.sendMessage(msg.chat.id, 'I am alive!');
+  if (msg.message === '/help') {
+    bot.sendMessage(msg.chat.id, helpCommand)
+  }
+  else {
+    bot.sendMessage(msg.chat.id, 'I am alive!')
+  }
 });
 
 app.get('/send_message/:message', (req, res) => {
